@@ -78,8 +78,11 @@ jobs:
           cd ./git/zonvie/
           git clone --filter=tree:0 --no-checkout $EMACS_REPO .
           git checkout ${{ needs.prepare_env.outputs.commit }}
+
       - name: Build Windows App (Release)
-        run: zig build windows -Dtarget=${{ matrix.target }} -Doptimize=ReleaseFast
+        run: |
+          echo `pwd`
+          zig build windows -Dtarget=${{ matrix.target }} -Doptimize=ReleaseFast
 
       - name: Create Windows ZIP
         run: |
