@@ -98,7 +98,7 @@ jobs:
         id: upload_release
         uses: svenstaro/upload-release-action@v2
         with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          repo_token: ${{ github.token }}
           file: ./*{.zip}
           file_glob: true
           tag: v${{ needs.prepare_env.outputs.version }}
