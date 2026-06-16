@@ -97,7 +97,7 @@ jobs:
       # Upload release for each build
       - name: Upload binaries to release
         id: upload_release
-        uses: softprops/action-gh-release@v2
+        uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ github.token }}
           file: ./*{.zip}
