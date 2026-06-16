@@ -42,19 +42,19 @@ jobs:
 
   build:
     needs: prepare_env
-    name: Build Emacs
+    name: Build zonvie
     # Matrix strategy from
     # https://github.com/msys2/MINGW-packages/blob/master/.github/workflows/main.yml
+    runs-on: ubuntu-latest
+
     strategy:
       fail-fast: false
       matrix:
         include:
-          - os: ubuntu-latest
           - arch: x64
             target: x86_64-windows-gnu
 
     # The type of runner that the job will run on
-    runs-on: ${{ matrix.os }}
 
 
     # Steps represent a sequence of tasks that will be executed as part of the job
