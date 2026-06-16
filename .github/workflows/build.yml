@@ -71,8 +71,9 @@ jobs:
           mkdir -p ./git/zonvie
           cd ./git/zonvie/
           git clone --filter=tree:0 --no-checkout $EMACS_REPO .
+          echo `pwd`
           git checkout ${{ needs.prepare_env.outputs.commit }}
-
+          echo "test2"
       - name: Build Windows App (Release)
         run: zig build windows -Dtarget=${{ matrix.target }} -Doptimize=ReleaseFast
 
