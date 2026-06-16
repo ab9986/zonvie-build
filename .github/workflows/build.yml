@@ -93,7 +93,16 @@ jobs:
           cd windows/zig-out
           zip -r "../../$ZIP_NAME" zonvie.exe
           cd ../..
-      
+      - name: 通过 API 创建 tag
+        uses: actions/github-script@v7
+        with:
+        script: |
+          await github.rest.git.createRef({
+          owner: context.repo.owner,
+          repo: context.repo.repo,
+          ref: 'refs/tags/v${{ needs.prepare_env.outputs.version }}',
+          sha: context.sha
+         });
       # Upload release for each build
       - name: Upload binaries to release
         id: upload_release
