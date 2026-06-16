@@ -1,0 +1,101 @@
+# This is a basic workflow to help you get started with Actions
+
+name: build
+
+# Controls when the action will run.
+on:
+  schedule:
+    - cron: "0 7 * * *" # monthly
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+env:
+  ZIG_VERSION: "0.15.2"
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  prepare_env:
+    name: Prepare build version
+    runs-on: ubuntu-latest
+    env:
+      EMACS_REPO: https://github.com/akiyosi/zonvie.git
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Get build version
+        id: vars
+        run: |
+          mkdir -p ./git/zonvie
+          cd ./git/zonvie/
+          git clone -b main --depth 1 $EMACS_REPO .
+          ts=`date +'%Y%m%d'`
+          commit=`git rev-parse --short=7 HEAD`
+          major_ver=0.3
+          version=`echo ${major_ver}.${{ github.run_number }}.${ts}.${commit}`
+
+          echo "commit=${commit}" >> $GITHUB_ENV
+          echo "version=${version}" >> $GITHUB_ENV
+          echo "pkg_version=${major_ver}.${{ github.run_number }}.0.0" >> $GITHUB_ENV
+    outputs:
+      repo: ${{ env.EMACS_REPO }}
+      version: ${{ env.version }}
+      pkg_version: ${{ env.pkg_version }}
+      commit: ${{ env.commit }}
+
+  build:
+    needs: prepare_env
+    name: Build Emacs
+    # Matrix strategy from
+    # https://github.com/msys2/MINGW-packages/blob/master/.github/workflows/main.yml
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+          - arch: x64
+            target: x86_64-windows-gnu
+
+    # The type of runner that the job will run on
+    runs-on: ${{ matrix.os }}
+
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v4
+        with:
+          # Full history + tags so `git describe --tags` in build.zig can
+          # resolve the version string baked into the binary.
+          fetch-depth: 0
+      - name: Setup Zig
+        uses: mlugg/setup-zig@v2
+        with:
+          version: ${{ env.ZIG_VERSION }}
+
+      - name: Clone zonvie
+        run: |
+          mkdir -p ./git/emacs
+          cd ./git/emacs/
+          git clone --filter=tree:0 --no-checkout $EMACS_REPO .
+          git checkout ${{ needs.prepare_env.outputs.commit }}
+
+      - name: Build Windows App (Release)
+        run: zig build windows -Dtarget=${{ matrix.target }} -Doptimize=ReleaseFast
+
+      - name: Create Windows ZIP
+        run: |
+          ZIP_NAME="zonvie-${{ github.ref_name }}-windows-${{ matrix.arch }}.zip"
+          cd windows/zig-out
+          zip -r "../../$ZIP_NAME" zonvie.exe
+          cd ../..
+      
+      # Upload release for each build
+      - name: Upload binaries to release
+        id: upload_release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ github.token }}
+          file: ./*{.zip}
+          file_glob: true
+          tag: v${{ needs.prepare_env.outputs.version }}
+          release_name: emacs_${{ needs.prepare_env.outputs.version }}
+          draft: false
+          prerelease: false
