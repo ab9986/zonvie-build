@@ -74,8 +74,8 @@ jobs:
       - name: Clone zonvie
         run: |
           # echo "clone zonvie"
-          # mkdir -p ./git/zonvie
-          # cd ./git/zonvie/
+          mkdir -p ./git/zonvie
+          cd ./git/zonvie/
           git clone --filter=tree:0 --no-checkout $EMACS_REPO .
           git checkout ${{ needs.prepare_env.outputs.commit }}
           echo `pwd`
