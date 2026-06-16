@@ -48,10 +48,15 @@ jobs:
     runs-on: ubuntu-latest
 
     strategy:
+      fail-fast: false
       matrix:
         include:
           - arch: x64
             target: x86_64-windows-gnu
+    env:
+      EMACS_REPO: ${{ needs.prepare_env.outputs.repo }}
+      EMACS_PKG_VERSION: ${{ needs.prepare_env.outputs.pkg_version }}
+      EMACS_CERT_SECRET: ${{ secrets.EMACS_CERT_SECRET }}
 
     # The type of runner that the job will run on
 
@@ -71,9 +76,7 @@ jobs:
           mkdir -p ./git/zonvie
           cd ./git/zonvie/
           git clone --filter=tree:0 --no-checkout $EMACS_REPO .
-          echo `pwd`
           git checkout ${{ needs.prepare_env.outputs.commit }}
-          echo "test2"
       - name: Build Windows App (Release)
         run: zig build windows -Dtarget=${{ matrix.target }} -Doptimize=ReleaseFast
 
