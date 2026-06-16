@@ -83,10 +83,12 @@ jobs:
       - name: Build Windows App (Release)
         run: |
           echo `pwd`
+          cd ./git/zonvie/
           zig build windows -Dtarget=${{ matrix.target }} -Doptimize=ReleaseFast
 
       - name: Create Windows ZIP
         run: |
+          cd ./git/zonvie/
           ZIP_NAME="zonvie-${{ github.ref_name }}-windows-${{ matrix.arch }}.zip"
           cd windows/zig-out
           zip -r "../../$ZIP_NAME" zonvie.exe
