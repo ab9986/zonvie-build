@@ -95,7 +95,9 @@ jobs:
           cd windows/zig-out
           zip -r "../../$ZIP_NAME" zonvie.exe
           cd ../..
-          echo `ls -l`
+          echo `ls`
+          echo `pwd`
+          cp ./*.zip ～/
       # Upload release for each build
       - name: Upload binaries to release
         id: upload_release
