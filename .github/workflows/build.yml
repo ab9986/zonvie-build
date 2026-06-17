@@ -105,6 +105,11 @@ jobs:
         run: |
           pwd
           ls
+      - name: Upload Windows ZIP
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-release-${{ matrix.arch }}
+          path: "*.zip"
       # Upload release for each build
       - name: Upload binaries to release
         id: upload_release
