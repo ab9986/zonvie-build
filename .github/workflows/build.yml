@@ -93,8 +93,8 @@ jobs:
           cd ./git/zonvie/
           ZIP_NAME="zonvie-${{ github.ref_name }}-windows-${{ matrix.arch }}.zip"
           cd windows/zig-out
-          zip -r "../../$ZIP_NAME" zonvie.exe
-          cd ../..
+          zip -r "../../../../$ZIP_NAME" zonvie.exe
+          cd ../../../../
           echo `ls`
           echo `pwd`
       # Upload release for each build
@@ -103,7 +103,7 @@ jobs:
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ github.token }}
-          file: ./git/zonvie/*{.zip}
+          file: ./*{.zip}
           # file_glob: true
           tag: v${{ needs.prepare_env.outputs.version }}
           release_name: zonvie_${{ needs.prepare_env.outputs.version }}
