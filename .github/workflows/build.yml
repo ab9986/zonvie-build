@@ -95,6 +95,7 @@ jobs:
           cd windows/zig-out
           zip -r "../../$ZIP_NAME" zonvie.exe
           cd ../..
+          echo `ls -l`
       # Upload release for each build
       - name: Upload binaries to release
         id: upload_release
@@ -102,7 +103,7 @@ jobs:
         with:
           repo_token: ${{ github.token }}
           file: ./*{.zip}
-          file_glob: true
+          # file_glob: true
           tag: v${{ needs.prepare_env.outputs.version }}
           release_name: zonvie_${{ needs.prepare_env.outputs.version }}
           draft: false
