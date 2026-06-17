@@ -101,6 +101,8 @@ jobs:
       - name: Upload binaries to release
         id: upload_release
         uses: svenstaro/upload-release-action@v2
+        run: |
+          echo `pwd`
         with:
           repo_token: ${{ github.token }}
           file: ./git/zonvie/*{.zip}
