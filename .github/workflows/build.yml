@@ -108,8 +108,8 @@ jobs:
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ github.token }}
-          file: ./zips/*.zip
-          # file_glob: true
+          file: ./zips/*{.zip,.deb,.msix}
+          file_glob: true
           tag: v${{ needs.prepare_env.outputs.version }}
           release_name: zonvie_${{ needs.prepare_env.outputs.version }}
           draft: false
