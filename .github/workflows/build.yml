@@ -92,6 +92,10 @@ jobs:
           echo `ls`
           cd ./git/zonvie/
           zig build windows -Dtarget=${{ matrix.target }} -Doptimize=ReleaseFast
+          mv ./windows/zig-out/zonvie.exe  ./windows/zig-out/zonvie-1.exe          
+          mv -f ../../../neovim.ico  ./windows/resources/zonvie.ico
+          zig build windows -Dtarget=${{ matrix.target }} -Doptimize=ReleaseFast
+          mv ./windows/zig-out/zonvie.exe  ./windows/zig-out/zonvie-notepad.exe    
 
       - name: Create Windows ZIP
         run: |
@@ -99,7 +103,7 @@ jobs:
           cd ./git/zonvie/
           ZIP_NAME="zonvie-${{ github.ref_name }}-windows-${{ matrix.arch }}.zip"
           cd windows/zig-out
-          zip -r "../../../../zips/$ZIP_NAME" zonvie.exe
+          zip -r "../../../../zips/$ZIP_NAME" *.exe
           cd ../../../../zips
           echo `ls`
           echo `pwd`
