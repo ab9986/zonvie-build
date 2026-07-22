@@ -21,7 +21,7 @@ jobs:
       EMACS_REPO: https://github.com/akiyosi/zonvie.git
       GH_TOKEN: ${{ github.token }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Get build version
         id: vars
         run: |
