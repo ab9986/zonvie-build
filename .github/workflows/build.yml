@@ -93,9 +93,11 @@ jobs:
           cd ./git/zonvie/
           zig build windows -Dtarget=${{ matrix.target }} -Doptimize=ReleaseFast
           mv ./windows/zig-out/zonvie.exe  ./windows/zig-out/zonvie-1.exe          
-          mv -f ../../../neovim.ico  ./windows/resources/zonvie.ico
+          mv -f ../../Number-0.ico  ./windows/resources/zonvie.ico
+          mv -f ../../Number-0.256.png ./zonvie.png
           zig build windows -Dtarget=${{ matrix.target }} -Doptimize=ReleaseFast
-          mv ./windows/zig-out/zonvie.exe  ./windows/zig-out/zonvie-notepad.exe    
+          mv ./windows/zig-out/zonvie.exe  ./windows/zig-out/zonvie-notepad.exe
+          mv ./windows/zig-out/zonvie-1.exe  ./windows/zig-out/zonvie.exe
 
       - name: Create Windows ZIP
         run: |
