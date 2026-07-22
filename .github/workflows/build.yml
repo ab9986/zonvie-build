@@ -89,6 +89,7 @@ jobs:
       - name: Build Windows App (Release)
         run: |
           echo `pwd`
+          echo `ls`
           cd ./git/zonvie/
           zig build windows -Dtarget=${{ matrix.target }} -Doptimize=ReleaseFast
 
